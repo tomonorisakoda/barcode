@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>バーコード読み取りとCSV出力</title>
+  <script src="https://unpkg.com/@zxing/library@latest"></script>
+  <style>
+    #video { width: 100%; max-width: 400px; }
+    #results { margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <h2>バーコード読み取り</h2>
+  <button onclick="startScanner()">カメラ起動</button>
+  <video id="video" autoplay></video>
+  <div id="results"></div>
+
+  <h3>数値入力</h3>
+  <input type="number" id="valueInput" placeholder="数値を入力">
+  <button onclick="saveEntry()">保存</button>
+
+  <h3>データ一覧</h3>
+  <ul id="dataList"></ul>
+
+  <button onclick="downloadCSV()">CSV出力</button>
+
+  <script>
+    const codeReader = new ZXing.BrowserBarcodeReader();
+    const videoElement = document.getElementById('video');
+    const resultsDiv = document.getElementById('results');
+    const dataList = document.getElementById('dataList');
+    let currentBarcode = '';
+    let entries = [];
+
+    async function startScanner() {
+      resultsDiv.textContent = 'バーコードをスキャン中...';
+      try {
+        const result = await codeReader.decodeOnceFromVideoDevice(undefined, 'video');
+        currentBarcode = result.text;
+        resultsDiv.textContent = `読み取ったバーコード: ${currentBarcode}`;
+        codeReader.reset(); // カメラ停止
+      } catch (err) {
+        resultsDiv.textContent = '読み取り失敗: ' + err;
+      }
+    }
+
+    function saveEntry() {
+      const value = document.getElementById('valueInput').value;
+      if (!currentBarcode || !value) {
+        alert('バーコードと数値を入力してください');
+        return;
+      }
+      entries.push({ barcode: currentBarcode, value });
+      const li = document.createElement('li');
+      li.textContent = `バーコード: ${currentBarcode}, 数値: ${value}`;
+      dataList.appendChild(li);
+      currentBarcode = '';
+      document.getElementById('valueInput').value = '';
+      resultsDiv.textContent = '';
+    }
+
+    function downloadCSV() {
+      let csv = 'バーコード,数値\n';
+      entries.forEach(entry => {
+        csv += `${entry.barcode},${entry.value}\n`;
+      });
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'barcode_data.csv';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+  </script>
+</body>
+</html>
