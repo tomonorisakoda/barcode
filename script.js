@@ -65,7 +65,7 @@ function saveEntry() {
 
 function appendToList(barcode, value, time) {
   const li = document.createElement('li');
-  li.textContent = `バーコード: ${barcode}, 数値: ${value}, 時刻: ${time}`;
+  li.textContent = `バーコード: ${barcode}, 個数: ${value}, 時刻: ${time}`;
   dataList.appendChild(li);
 }
 
@@ -79,7 +79,7 @@ function saveToLocalStorage() {
 }
 
 function createCSV(entries) {
-  let csv = 'バーコード,数値,タイムスタンプ\n';
+  let csv = 'バーコード,個数,タイムスタンプ\n';
   csv += entries.map(e => `${e.barcode},${e.value},${e.time}`).join('\n');
   return csv;
 }
