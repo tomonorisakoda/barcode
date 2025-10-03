@@ -57,3 +57,29 @@ input {
   border-radius: 6px;
   border: 1px solid #ddd;
 }
+
+.input-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.input-row input,
+.input-row button {
+  flex: 1;
+  font-size: 1.2em;
+  padding: 15px;
+  box-sizing: border-box;
+  border-radius: 8px;
+}
+
+.input-row input {
+  border: 1px solid #ccc;
+  background-color: white;
+}
+
+.input-row button {
+  background-color: #007aff;
+  color: white;
+  border: none;
+}
