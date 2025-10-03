@@ -100,3 +100,12 @@ function downloadCSV() {
   a.click();
   URL.revokeObjectURL(url);
 }
+
+function clearEntries() {
+  if (confirm("本当にすべてのデータを削除しますか？")) {
+    entries = [];
+    localStorage.removeItem('barcodeEntries');
+    updateList();
+    resultsDiv.textContent = '🗑️ データ一覧を削除しました';
+  }
+}
