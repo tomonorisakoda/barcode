@@ -3,13 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <title>バーコード読み取りとCSV出力</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
   <script src="https://unpkg.com/@zxing/library@latest"></script>
-  <style>
-    body { font-family: sans-serif; padding: 20px; }
-    #video { width: 100%; max-width: 400px; border: 1px solid #ccc; margin-top: 10px; }
-    #results, #dataList { margin-top: 10px; }
-    input, button { margin-top: 10px; display: block; }
-  </style>
 </head>
 <body>
   <h2>バーコード読み取り</h2>
@@ -26,104 +22,6 @@
 
   <button onclick="downloadCSV()">📄 CSV出力</button>
 
-  <script>
-    const codeReader = new ZXing.BrowserBarcodeReader();
-    const videoElement = document.getElementById('video');
-    const resultsDiv = document.getElementById('results');
-    const dataList = document.getElementById('dataList');
-    let currentBarcode = '';
-    let entries = [];
-
-    // ページ読み込み時にlocalStorageから復元
-    window.onload = () => {
-      const saved = localStorage.getItem('barcodeEntries');
-      if (saved) {
-        entries = JSON.parse(saved);
-        updateList();
-      }
-    };
-
-    async function startScanner() {
-      resultsDiv.textContent = 'バーコードをスキャン中...';
-      try {
-        const constraints = {
-          video: {
-            facingMode: { exact: "environment" } // 背面カメラを指定
-          }
-        };
-
-        const stream = await navigator.mediaDevices.getUserMedia(constraints);
-        videoElement.srcObject = stream;
-
-        const result = await codeReader.decodeOnceFromStream(stream, videoElement);
-        currentBarcode = result.text;
-        resultsDiv.textContent = `✅ 読み取ったバーコード: ${currentBarcode}`;
-        codeReader.reset();
-        stream.getTracks().forEach(track => track.stop()); // カメラ停止
-      } catch (err) {
-        resultsDiv.textContent = '❌ 読み取り失敗: ' + err;
-      }
-    }
-
-    function saveEntry() {
-      const value = document.getElementById('valueInput').value;
-      if (!currentBarcode) {
-        alert('バーコードが読み取られていません');
-        return;
-      }
-      if (!value || isNaN(value) || Number(value) < 0) {
-        alert('有効な数値を入力してください');
-        return;
-      }
-
-      const timestamp = new Date().toISOString();
-      const existingIndex = entries.findIndex(e => e.barcode === currentBarcode);
-
-      if (existingIndex >= 0) {
-        entries[existingIndex] = { barcode: currentBarcode, value, time: timestamp };
-      } else {
-        entries.push({ barcode: currentBarcode, value, time: timestamp });
-      }
-
-      saveToLocalStorage();
-      updateList();
-
-      currentBarcode = '';
-      document.getElementById('valueInput').value = '';
-      resultsDiv.textContent = '';
-    }
-
-    function appendToList(barcode, value, time) {
-      const li = document.createElement('li');
-      li.textContent = `バーコード: ${barcode}, 数値: ${value}, 時刻: ${time}`;
-      dataList.appendChild(li);
-    }
-
-    function updateList() {
-      dataList.innerHTML = '';
-      entries.forEach(e => appendToList(e.barcode, e.value, e.time));
-    }
-
-    function saveToLocalStorage() {
-      localStorage.setItem('barcodeEntries', JSON.stringify(entries));
-    }
-
-    function createCSV(entries) {
-      let csv = 'バーコード,数値,タイムスタンプ\n';
-      csv += entries.map(e => `${e.barcode},${e.value},${e.time}`).join('\n');
-      return csv;
-    }
-
-    function downloadCSV() {
-      const csv = createCSV(entries);
-      const blob = new Blob([csv], { type: 'text/csv' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'barcode_data.csv';
-      a.click();
-      URL.revokeObjectURL(url);
-    }
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>

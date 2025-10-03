@@ -1,0 +1,59 @@
+body {
+  font-family: sans-serif;
+  padding: 10px;
+  margin: 0;
+  font-size: 1.2em;
+  background-color: #f9f9f9;
+}
+
+h2, h3 {
+  font-size: 1.5em;
+  margin-top: 20px;
+}
+
+button, input {
+  width: 100%;
+  font-size: 1.2em;
+  padding: 15px;
+  margin-top: 10px;
+  box-sizing: border-box;
+  border: none;
+  border-radius: 8px;
+}
+
+button {
+  background-color: #007aff;
+  color: white;
+}
+
+input {
+  border: 1px solid #ccc;
+  background-color: white;
+}
+
+#video {
+  width: 100%;
+  max-width: 100%;
+  border: 2px solid #ccc;
+  margin-top: 10px;
+  border-radius: 8px;
+}
+
+#results {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+#dataList {
+  margin-top: 10px;
+  padding-left: 0;
+}
+
+#dataList li {
+  list-style: none;
+  padding: 10px;
+  background-color: #fff;
+  margin-bottom: 5px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+}
