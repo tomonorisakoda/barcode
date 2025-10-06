@@ -86,14 +86,19 @@ function createCSV(entries) {
 
 function downloadCSV() {
   const csv = createCSV(entries);
-  const blob = new Blob([csv], { type: 'text/csv' });
+  
+  // BOMを付与（Excelでの文字化け対策）
+  const bom = new Uint8Array([0xef, 0xbb, 0xbf]);
+  
+  // Blobでデータを作成
+  const blob = new Blob([bom, new TextEncoder().encode(csv)], { type: 'text/csv' });
   const url = URL.createObjectURL(blob);
-
+  
   // 日時をファイル名に追加（例: barcode_data_2025-10-04_05-02.csv）
   const now = new Date();
   const timestamp = now.toISOString().slice(0, 16).replace('T', '_').replace(':', '-');
   const filename = `barcode_data_${timestamp}.csv`;
-
+  
   const a = document.createElement('a');
   a.href = url;
   a.download = filename;
