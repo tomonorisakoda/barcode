@@ -80,9 +80,7 @@ function saveToLocalStorage() {
 
 function createCSV(entries) {
   let csv = 'バーコード,個数,タイムスタンプ\n';
-  entries.forEach(e => {
-    csv += `${e.barcode},${e.value},${e.time}\n`;
-  });
+  csv += entries.map(e => `${e.barcode},${e.value},${e.time}`).join('\n');
   return csv;
 }
 
