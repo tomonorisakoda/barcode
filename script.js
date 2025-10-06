@@ -79,7 +79,7 @@ function saveToLocalStorage() {
 }
 
 function createCSV(entries) {
-  let csv = 'バーコード,個数,タイムスタンプ';
+  let csv = 'バーコード,個数,タイムスタンプ\n';
   csv += entries.map(e => `${e.barcode},${e.value},${e.time}`).join('\n');
   return csv;
 }
